@@ -17,7 +17,7 @@ public class CustomerAccount {
     public static final String SEQUENCE_NAME = "customerAccount_sequence";
 	
 	@Id
-    private long id;
-    private Integer custId;
-    private Integer accId;
+    private Long id;
+    private Long custId;
+    private Long accId;
 }

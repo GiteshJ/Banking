@@ -3,14 +3,15 @@ package com.banking.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.banking.dto.UserDto;
 import com.banking.model.Customer;
-import com.banking.model.Employee;
 import com.banking.repository.CustomerRepository;
 import com.banking.repository.EmployeeRepository;
 import com.banking.util.UserValidation;
 
+@Transactional
 @Service
 public class EmployeeService {
 	@Autowired

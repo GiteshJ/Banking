@@ -6,7 +6,8 @@ public class UserValidation {
 
 		
 	public static boolean validate(UserDto user) {
-		if(user.getUserName()== null ||
+		if(user==null ||
+				user.getUserName()== null ||
 				user.getPassword()==null ||
 				user.getFirstName()==null ||
 				user.getLastName() == null) return false;

@@ -18,7 +18,7 @@ public class Kyc {
 	
 	@Id
     private long id;
-    private Integer custId;
+    private Long custId;
     private String adhaarNum;
     private String panNum;
 
