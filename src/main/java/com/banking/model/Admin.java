@@ -19,7 +19,7 @@ public class Admin {
     public static final String SEQUENCE_NAME = "admin_sequence";
 	
 	@Id
-    private long id;
+    private Long id;
 	@Indexed(unique=true)
     private String userName;
     private String password;

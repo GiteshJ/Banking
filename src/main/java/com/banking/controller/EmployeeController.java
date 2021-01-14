@@ -10,33 +10,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.banking.dto.UserCrendentials;
 import com.banking.dto.UserDto;
-import com.banking.service.AdminService;
+import com.banking.service.EmployeeService;
 
 @RestController
-@RequestMapping("/admin")
-public class AdminController {
+@RequestMapping("/employee")
+public class EmployeeController {
 
 	@Autowired
-	AdminService adminService;
+	EmployeeService employeeService;
 	
-	@PostMapping("/addAdmin")
-	public String saveAdmin(@RequestBody UserDto user) {
-		return adminService.addAdmin(user);
+	@PostMapping("/addCustomer")
+	public String addCustomer(@RequestBody UserDto user) {
+		return employeeService.addCustomer(user);
 	}
 	
-	@PostMapping("/addEmployee")
-	public String saveEmployee(@RequestBody UserDto user) {
-		return adminService.addEmployee(user);
-	}
-	
-	@DeleteMapping("/deleteEmployee/{username}")
-	public String deleteEmployee(@PathVariable String username) {
-		return adminService.deleteEmployee(username);
+	@DeleteMapping("/deleteCustomer/{username}")
+	public String deleteCustomer(@PathVariable String username) {
+		return employeeService.deleteCustomer(username);
 	}
 	
 	@PostMapping("/authenticate")
 	public String authenticate(@RequestBody UserCrendentials userCrendentials) {
 		return "";
 	}
-	
 }
