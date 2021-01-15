@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.banking.auth.model.TokenBlacklistSet;
 import com.banking.auth.service.MyUserDetailsService;
 import com.banking.jwtUtility.JwtUtil;
 
@@ -24,7 +25,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
     private MyUserDetailsService userDetailsService;
-
+    @Autowired
+    TokenBlacklistSet tokenBlacklistSet;
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -47,7 +49,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-            if (jwtUtil.validateToken(jwt, userDetails)) {
+            if(tokenBlacklistSet.blackListedTokens.contains(jwt)) {
+            	System.out.println("User Token BlackListed Re Authentiicate");
+            }
+            
+            else if (jwtUtil.validateToken(jwt, userDetails)) {
 
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());

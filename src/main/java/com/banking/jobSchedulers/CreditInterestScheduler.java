@@ -15,9 +15,12 @@ public class CreditInterestScheduler {
 	@Autowired
 	AccountRepository accountRepository;
 	
+	
+	//@Scheduled(cron = "0 0/5 * * * *")
 	@Scheduled(cron = "0 0 12 31 3 ?")
 	public void calculateInterest() {
 		try {
+			System.out.println("Running Scheduler");
 			List<Account> allAcc = accountRepository.findAll();
 			
 			allAcc.parallelStream().forEach(acc -> {
