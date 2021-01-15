@@ -6,6 +6,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.banking.ValidationUtil.AccountValidation;
+import com.banking.ValidationUtil.BankStatementValidation;
+import com.banking.ValidationUtil.LinkAccountValidation;
+import com.banking.ValidationUtil.TransferMoneyValidation;
+import com.banking.ValidationUtil.UpdateBalanceValidation;
 import com.banking.dto.BankStatementDto;
 import com.banking.dto.LinkAccountDto;
 import com.banking.dto.TransferMoneyDto;
@@ -17,11 +22,6 @@ import com.banking.reportGenerators.BankStatementGenerator;
 import com.banking.repository.AccountRepository;
 import com.banking.repository.CustomerAccountRepository;
 import com.banking.repository.CustomerRepository;
-import com.banking.util.AccountValidation;
-import com.banking.util.BankStatementValidation;
-import com.banking.util.LinkAccountValidation;
-import com.banking.util.TransferMoneyValidation;
-import com.banking.util.UpdateBalanceValidation;
 
 @Service
 @Transactional

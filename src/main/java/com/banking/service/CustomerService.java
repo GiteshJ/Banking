@@ -9,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.banking.ValidationUtil.KYCValidation;
+import com.banking.ValidationUtil.UserValidation;
 import com.banking.dto.AccountDetailsDto;
 import com.banking.dto.CustomerDetailsDto;
 import com.banking.dto.KycDetailsDto;
@@ -21,8 +23,6 @@ import com.banking.repository.AccountRepository;
 import com.banking.repository.CustomerAccountRepository;
 import com.banking.repository.CustomerRepository;
 import com.banking.repository.KycRepository;
-import com.banking.util.KYCValidation;
-import com.banking.util.UserValidation;
 
 @Service
 @Transactional

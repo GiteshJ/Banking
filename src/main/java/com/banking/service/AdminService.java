@@ -1,15 +1,19 @@
 package com.banking.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.banking.ValidationUtil.UserValidation;
 import com.banking.dto.UserDto;
 import com.banking.model.Admin;
+import com.banking.model.Employee;
 import com.banking.repository.AdminRepository;
 import com.banking.repository.EmployeeRepository;
-import com.banking.util.UserValidation;
 
 @Service
 @Transactional
@@ -25,8 +29,10 @@ public class AdminService {
 		
 		try {
 			if(!UserValidation.validate(user)) throw new Exception("Invalid details!");
+			
+			Optional<Admin> adminOp =  adminRepository.findByUserName(user.getUserName());
+			if(adminOp.isPresent()) throw new Exception("Invalid details!");
 			Admin admin = new Admin();
-			if(adminRepository.findByUserName(user.getUserName())!=null) throw new Exception("Invalid details!");
 			admin.setUserName(user.getUserName());
 			admin.setPassword(passwordEncoder.encode(user.getPassword()));
 			admin.setFirstName(user.getFirstName());

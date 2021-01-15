@@ -1,4 +1,4 @@
-package com.banking.util;
+package com.banking.ValidationUtil;
 
 import com.banking.dto.UserDto;
 
