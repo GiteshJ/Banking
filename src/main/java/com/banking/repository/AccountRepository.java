@@ -7,4 +7,5 @@ import com.banking.model.Account;
 
 public interface AccountRepository extends MongoRepository<Account,Long>{
 
+	Account findByAccNum(Integer accNum);
 }

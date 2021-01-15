@@ -11,8 +11,8 @@ import lombok.Setter;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountDetailsDto {
-	private Integer accNum;
-    private Float balance;
-    private String accType;
+public class TransferMoneyDto {
+	private Integer accNumSender;
+	private Integer accNumReceiver;
+	private Float balance;
 }

@@ -11,8 +11,7 @@ import lombok.Setter;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountDetailsDto {
+public class UpdateBalanceDto {
 	private Integer accNum;
     private Float balance;
-    private String accType;
 }

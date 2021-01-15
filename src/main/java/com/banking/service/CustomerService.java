@@ -90,6 +90,7 @@ public class CustomerService {
 						AccountDetailsDto  accDetails  = new AccountDetailsDto();
 						accDetails.setAccNum(acc.get().getAccNum());
 						accDetails.setBalance(acc.get().getBalance());
+						accDetails.setAccType(acc.get().getAccType());
 						accountDetailsList.add(accDetails);
 					}
 				}
