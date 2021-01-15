@@ -8,9 +8,8 @@ public class KYCValidation {
 		if(kycDetailsDto==null ||
 				kycDetailsDto.getUserName()==null ||
 				kycDetailsDto.getAdhaarNum()==null ||
-				kycDetailsDto.getPanNum()==null) {
+				kycDetailsDto.getPanNum()==null)
 			return false;
-		}
 		return true;
 	}
 }

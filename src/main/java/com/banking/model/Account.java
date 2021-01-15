@@ -21,7 +21,7 @@ public class Account {
     private long id;
 	@Indexed(unique=true)
     private Integer accNum;
-    private Float balance;
+    private Double balance;
     private String accType;
     
 }

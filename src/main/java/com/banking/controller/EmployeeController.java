@@ -19,14 +19,15 @@ public class EmployeeController {
 	@Autowired
 	EmployeeService employeeService;
 	
-	@PostMapping("/addCustomer")
-	public String addCustomer(@RequestBody UserDto user) {
-		return employeeService.addCustomer(user);
+	
+	@PostMapping("/addEmployee")
+	public String saveEmployee(@RequestBody UserDto user) {
+		return employeeService.addEmployee(user);
 	}
 	
-	@DeleteMapping("/deleteCustomer/{username}")
-	public String deleteCustomer(@PathVariable String username) {
-		return employeeService.deleteCustomer(username);
+	@DeleteMapping("/deleteEmployee/{username}")
+	public String deleteEmployee(@PathVariable String username) {
+		return employeeService.deleteEmployee(username);
 	}
 	
 	@PostMapping("/authenticate")

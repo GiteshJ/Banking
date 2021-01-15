@@ -16,7 +16,7 @@ import lombok.ToString;
 public class Admin {
 	
 	@Transient
-    public static final String SEQUENCE_NAME = "admin_sequence";
+    public static final String SEQUENCE_NAME = "Admin_sequence";
 	
 	@Id
     private Long id;

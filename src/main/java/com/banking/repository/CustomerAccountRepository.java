@@ -8,4 +8,5 @@ import com.banking.model.CustomerAccount;
 
 public interface CustomerAccountRepository extends MongoRepository<CustomerAccount,Long> {
 	List<CustomerAccount> findByCustId(Long id);
+	CustomerAccount findByAccId(Long id);
 }

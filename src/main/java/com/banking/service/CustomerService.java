@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.banking.dto.AccountDetailsDto;
 import com.banking.dto.CustomerDetailsDto;
 import com.banking.dto.KycDetailsDto;
+import com.banking.dto.UserDto;
 import com.banking.model.Account;
 import com.banking.model.Customer;
 import com.banking.model.CustomerAccount;
@@ -20,6 +22,7 @@ import com.banking.repository.CustomerAccountRepository;
 import com.banking.repository.CustomerRepository;
 import com.banking.repository.KycRepository;
 import com.banking.util.KYCValidation;
+import com.banking.util.UserValidation;
 
 @Service
 @Transactional
@@ -33,14 +36,55 @@ public class CustomerService {
 	CustomerAccountRepository customerAccountRepository;
 	@Autowired
 	AccountRepository accountRepository;
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	@Autowired
+	SequenceGeneratorService sequenceGenerator;
+	
+	public String deleteCustomer(String username) {
+		
+		try {
+			Customer cust = customerRepository.findByUserName(username);
+			if(cust==null) throw new Exception("Invalid details!");
+			customerRepository.deleteById(Long.valueOf(cust.getId()));
+		}
+		catch(Exception e) {
+			return "Customer does not exist";
+		}
+		return "Customer Successfully Deleted";
+		
+	}
+	
+	public String addCustomer(UserDto user) {
+		
+		try {
+			if(!UserValidation.validate(user)) throw new Exception("Invalid details!");
+			if(customerRepository.findByUserName(user.getUserName())!=null) throw new Exception("Invalid details!");
+			Customer cust = new Customer();
+			cust.setUserName(user.getUserName());
+			cust.setPassword(passwordEncoder.encode(user.getPassword()));
+			cust.setFirstName(user.getFirstName());
+			cust.setLastName(user.getLastName());
+			cust.setId(sequenceGenerator.generateSequence(Customer.SEQUENCE_NAME));
+			customerRepository.save(cust);
+		}
+		catch(Exception e) {
+			return "Customer Cannot be created try another username";
+		}
+		return "Customer Successfully Registered";
+		
+	}
 	
 	public String updateKyc(KycDetailsDto kycDetailsDto) {
 		try {
 			if(!KYCValidation.validate(kycDetailsDto)) throw new Exception("Invalid Details");
 			Customer cust = customerRepository.findByUserName(kycDetailsDto.getUserName());
-			if(cust==null) throw new Exception("Invalid Details");
+			if(cust==null) throw new Exception("Invalid User");
 			Kyc kycData = kycRepository.findByCustId(cust.getId());
-			if(kycData==null) kycData = new Kyc();
+			if(kycData==null) {
+				kycData = new Kyc();
+				kycData.setId(sequenceGenerator.generateSequence(Kyc.SEQUENCE_NAME));
+			}
 			
 			kycData.setCustId(cust.getId());
 			kycData.setAdhaarNum(kycDetailsDto.getAdhaarNum());
@@ -54,7 +98,8 @@ public class CustomerService {
 			
 		} 
 		catch(Exception e) {
-			return "KYC unsuccessfully";
+			e.printStackTrace();
+			return "KYC unsuccessful";
 		}
 		return "KYC successfully updated";
 	}

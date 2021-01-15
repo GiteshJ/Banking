@@ -1,19 +1,24 @@
 package com.banking.service;
 
+import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.banking.dto.BankStatementDto;
 import com.banking.dto.LinkAccountDto;
 import com.banking.dto.TransferMoneyDto;
 import com.banking.dto.UpdateBalanceDto;
 import com.banking.model.Account;
 import com.banking.model.Customer;
 import com.banking.model.CustomerAccount;
+import com.banking.reportGenerators.BankStatementGenerator;
 import com.banking.repository.AccountRepository;
 import com.banking.repository.CustomerAccountRepository;
 import com.banking.repository.CustomerRepository;
 import com.banking.util.AccountValidation;
+import com.banking.util.BankStatementValidation;
 import com.banking.util.LinkAccountValidation;
 import com.banking.util.TransferMoneyValidation;
 import com.banking.util.UpdateBalanceValidation;
@@ -28,6 +33,8 @@ public class AccountService {
 	CustomerRepository customerRepository;
 	@Autowired
 	CustomerAccountRepository customerAccountRepository;
+	@Autowired
+	SequenceGeneratorService sequenceGenerator;
 	
 	public String creatAccount(Account account) {
 		try {
@@ -37,6 +44,7 @@ public class AccountService {
 			acc.setAccNum(account.getAccNum());
 			acc.setBalance(account.getBalance());
 			acc.setAccType(account.getAccType());
+			acc.setId(sequenceGenerator.generateSequence(Account.SEQUENCE_NAME));
 			accountRepository.save(acc);
 		}
 		catch(Exception e) {
@@ -48,17 +56,21 @@ public class AccountService {
 	public String linkAccount(LinkAccountDto linkAccountDto) {
 		try {
 			if(!LinkAccountValidation.validate(linkAccountDto)) throw new Exception("Invalid details");
+			
 			Customer cust = customerRepository.findByUserName(linkAccountDto.getUsername());
 			Account acc = accountRepository.findByAccNum(linkAccountDto.getAccNum());
+			
 			if(acc==null || cust==null) throw new Exception("Invalid details");
+			if(customerAccountRepository.findByAccId(acc.getId())!=null) throw new Exception("Invalid details");
 			CustomerAccount customerAccount = new CustomerAccount();
 			customerAccount.setCustId(cust.getId());
 			customerAccount.setAccId(acc.getId());
+			customerAccount.setId(sequenceGenerator.generateSequence(CustomerAccount.SEQUENCE_NAME));
 			customerAccountRepository.save(customerAccount);
 					
 		}
 		catch(Exception e) {
-			return "Cannot Link Account";
+			return "Cannot Link Account / Already Linked";
 		}
 		return "Account Linked Successfully";
 	}
@@ -110,8 +122,17 @@ public class AccountService {
 		return "Money Transfered Successfully";
 	}
 	
-	public void getStatement() {}
+	public byte[] getStatement(BankStatementDto dankStatementDto) {
+		try {
+			if(!BankStatementValidation.validate(dankStatementDto)) throw new Exception("Invalid details");
+			return IOUtils.toByteArray(BankStatementGenerator.bankStatementPdfReport());
+		}
+		catch(Exception e) {
+			 
+		}
+		return null;
+	}
 	
-	public void calculateInterest() {}
+	
 	
 }

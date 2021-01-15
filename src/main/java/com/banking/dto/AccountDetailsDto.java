@@ -13,6 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AccountDetailsDto {
 	private Integer accNum;
-    private Float balance;
+    private Double balance;
     private String accType;
 }
