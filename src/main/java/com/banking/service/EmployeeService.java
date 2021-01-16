@@ -1,14 +1,20 @@
 package com.banking.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.banking.ValidationUtil.UserValidation;
+import com.banking.common.CommonConstants;
+import com.banking.customException.DuplicateUserNameException;
+import com.banking.customException.InvalidDataException;
+import com.banking.customException.UserNotFoundException;
 import com.banking.dto.UserDto;
 import com.banking.model.Employee;
 import com.banking.repository.EmployeeRepository;
-import com.banking.util.UserValidation;
 
 @Transactional
 @Service
@@ -20,38 +26,38 @@ public class EmployeeService {
 	@Autowired
 	SequenceGeneratorService sequenceGenerator;
 	
-	public String deleteEmployee(String username) {
+	public void deleteEmployee(String username) throws Exception {
 		
-		try {
-			Employee emp = employeeRepository.findByUserName(username);
-			if(emp==null) throw new Exception("Invalid details!");
-			employeeRepository.deleteById(Long.valueOf(emp.getId()));
-		}
-		catch(Exception e) {
-			return "Employee does not exist";
-		}
-		return "Employee Successfully deleted";
+		if(username==null || username.equalsIgnoreCase("")) throw new InvalidDataException(CommonConstants.INVALID_DATA_ERROR_MESSAGE);
+		Optional<Employee> emp = employeeRepository.findByUserName(username);
+		emp.orElseThrow(() -> new UserNotFoundException(CommonConstants.EMPLOYEE_DOES_NOT_EXIST_ERROR_MESSAGE));
+		
+		employeeRepository.deleteById(Long.valueOf(emp.get().getId()));
+
+		
+		return;
 		
 	}
 	
-	public String addEmployee(UserDto user) {
+	public void addEmployee(UserDto user) throws Exception {
 		
-		try {
-			if(!UserValidation.validate(user)) throw new Exception("Invalid details!");
-			if(employeeRepository.findByUserName(user.getUserName())!=null) throw new Exception("Invalid details!");
-			Employee emp = new Employee();
-			emp.setUserName(user.getUserName());
-			emp.setPassword(passwordEncoder.encode(user.getPassword()));
-			emp.setFirstName(user.getFirstName());
-			emp.setLastName(user.getLastName());
-			emp.setRoles("ROLE_EMPLOYEE");
-			emp.setId(sequenceGenerator.generateSequence(Employee.SEQUENCE_NAME));
-			employeeRepository.save(emp);
-		}
-		catch(Exception e) {
-			return "Employee Cannot be created try another username";
-		}
-		return "Employee Successfully Registered";
+		
+		if(!UserValidation.validate(user)) throw new InvalidDataException(CommonConstants.INVALID_DATA_ERROR_MESSAGE);
+		
+		Optional<Employee> empOp = employeeRepository.findByUserName(user.getUserName());
+		if(empOp.isPresent()) throw new DuplicateUserNameException(CommonConstants.DUPLICATE_USERNAME_ERROR_MESSAGE);
+		
+		
+		Employee emp = new Employee();
+		emp.setUserName(user.getUserName());
+		emp.setPassword(passwordEncoder.encode(user.getPassword()));
+		emp.setFirstName(user.getFirstName());
+		emp.setLastName(user.getLastName());
+		emp.setRoles("ROLE_EMPLOYEE");
+		emp.setId(sequenceGenerator.generateSequence(Employee.SEQUENCE_NAME));
+		employeeRepository.save(emp);
+		
+		return;
 		
 	}
 	

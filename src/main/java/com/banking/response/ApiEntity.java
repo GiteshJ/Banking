@@ -1,7 +1,5 @@
 package com.banking.response;
 
-import java.util.List;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +10,9 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class ApiEntity extends ApiResponseObject {
+
+
+	private static final long serialVersionUID = 3226028646221160078L;
 
 	private Object data;
 

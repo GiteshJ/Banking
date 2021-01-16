@@ -2,6 +2,8 @@ package com.banking.jobSchedulers;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -15,9 +17,12 @@ public class CreditInterestScheduler {
 	@Autowired
 	AccountRepository accountRepository;
 	
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+	//@Scheduled(cron = "0 0/5 * * * *")
 	@Scheduled(cron = "0 0 12 31 3 ?")
 	public void calculateInterest() {
 		try {
+			logger.info(CommonConstants.SCHEDULER_RUN_NOTIFY);
 			List<Account> allAcc = accountRepository.findAll();
 			
 			allAcc.parallelStream().forEach(acc -> {
