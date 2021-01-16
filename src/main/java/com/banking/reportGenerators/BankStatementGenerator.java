@@ -9,6 +9,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 public class BankStatementGenerator {
 
+	@SuppressWarnings("unused")
 	public static ByteArrayInputStream bankStatementPdfReport(){
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		

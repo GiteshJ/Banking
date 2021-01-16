@@ -3,10 +3,12 @@ package com.banking.auth.model;
 
 import java.io.Serializable;
 
+
 public class AuthenticationRequest implements Serializable {
 
 
-    private String username;
+	private static final long serialVersionUID = -1917511075215538230L;
+	private String username;
     private String password;
 
     public String getUsername() {

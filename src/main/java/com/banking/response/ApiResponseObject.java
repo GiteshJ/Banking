@@ -12,6 +12,8 @@ import lombok.ToString;
 @ToString
 public abstract class ApiResponseObject implements Serializable {
 	
+
+	private static final long serialVersionUID = 2641807169761075833L;
 	private LocalDateTime timestamp;
 	private String message;
 

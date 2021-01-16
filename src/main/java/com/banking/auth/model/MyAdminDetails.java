@@ -13,7 +13,9 @@ import com.banking.model.Admin;
 
 public class MyAdminDetails implements UserDetails {
 
-    private String userName;
+ 
+	private static final long serialVersionUID = 8535314850791044024L;
+	private String userName;
     private String password;
     private boolean active;
     private List<GrantedAuthority> authorities;

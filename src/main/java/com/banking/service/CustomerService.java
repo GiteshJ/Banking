@@ -11,6 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.banking.ValidationUtil.KYCValidation;
 import com.banking.ValidationUtil.UserValidation;
+import com.banking.common.CommonConstants;
+import com.banking.customException.DuplicateUserNameException;
+import com.banking.customException.InvalidDataException;
+import com.banking.customException.UserNotFoundException;
 import com.banking.dto.AccountDetailsDto;
 import com.banking.dto.CustomerDetailsDto;
 import com.banking.dto.KycDetailsDto;
@@ -41,111 +45,95 @@ public class CustomerService {
 	@Autowired
 	SequenceGeneratorService sequenceGenerator;
 	
-	public String deleteCustomer(String username) {
+	public void deleteCustomer(String username) throws Exception  {
 		
-		try {
-			Customer cust = customerRepository.findByUserName(username);
-			if(cust==null) throw new Exception("Invalid details!");
-			customerRepository.deleteById(Long.valueOf(cust.getId()));
-		}
-		catch(Exception e) {
-			return "Customer does not exist";
-		}
-		return "Customer Successfully Deleted";
+		if(username==null || username.trim().equalsIgnoreCase("")) throw new InvalidDataException(CommonConstants.INVALID_DATA_ERROR_MESSAGE);
+		Customer cust = customerRepository.findByUserName(username);
+		if(cust==null) throw new UserNotFoundException(CommonConstants.CUSTOMER_DOES_NOT_EXIST_ERROR_MESSAGE);
+		customerRepository.deleteById(Long.valueOf(cust.getId()));
+		return;
 		
 	}
 	
-	public String addCustomer(UserDto user) {
+	public void addCustomer(UserDto user) throws Exception {
 		
-		try {
-			if(!UserValidation.validate(user)) throw new Exception("Invalid details!");
-			if(customerRepository.findByUserName(user.getUserName())!=null) throw new Exception("Invalid details!");
-			Customer cust = new Customer();
-			cust.setUserName(user.getUserName());
-			cust.setPassword(passwordEncoder.encode(user.getPassword()));
-			cust.setFirstName(user.getFirstName());
-			cust.setLastName(user.getLastName());
-			cust.setId(sequenceGenerator.generateSequence(Customer.SEQUENCE_NAME));
-			customerRepository.save(cust);
-		}
-		catch(Exception e) {
-			return "Customer Cannot be created try another username";
-		}
-		return "Customer Successfully Registered";
+		
+		if(!UserValidation.validate(user)) throw new InvalidDataException(CommonConstants.INVALID_DATA_ERROR_MESSAGE);
+		if(customerRepository.findByUserName(user.getUserName())!=null) throw new DuplicateUserNameException(CommonConstants.DUPLICATE_USERNAME_ERROR_MESSAGE);
+		
+		Customer cust = new Customer();
+		cust.setUserName(user.getUserName());
+		cust.setPassword(passwordEncoder.encode(user.getPassword()));
+		cust.setFirstName(user.getFirstName());
+		cust.setLastName(user.getLastName());
+		cust.setId(sequenceGenerator.generateSequence(Customer.SEQUENCE_NAME));
+		customerRepository.save(cust);
+		
+		return ;
 		
 	}
 	
-	public String updateKyc(KycDetailsDto kycDetailsDto) {
-		try {
-			if(!KYCValidation.validate(kycDetailsDto)) throw new Exception("Invalid Details");
-			Customer cust = customerRepository.findByUserName(kycDetailsDto.getUserName());
-			if(cust==null) throw new Exception("Invalid User");
-			Kyc kycData = kycRepository.findByCustId(cust.getId());
-			if(kycData==null) {
-				kycData = new Kyc();
-				kycData.setId(sequenceGenerator.generateSequence(Kyc.SEQUENCE_NAME));
-			}
-			
-			kycData.setCustId(cust.getId());
-			kycData.setAdhaarNum(kycDetailsDto.getAdhaarNum());
-			kycData.setPanNum(kycDetailsDto.getPanNum());
-			
-			kycData = kycRepository.save(kycData);
-			
-			cust.setKycDetails(kycData.getId());
-			customerRepository.save(cust);
-			
-			
-		} 
-		catch(Exception e) {
-			e.printStackTrace();
-			return "KYC unsuccessful";
+	public void updateKyc(KycDetailsDto kycDetailsDto) throws Exception {
+		
+		if(!KYCValidation.validate(kycDetailsDto)) throw new InvalidDataException(CommonConstants.INVALID_DATA_ERROR_MESSAGE);
+		Customer cust = customerRepository.findByUserName(kycDetailsDto.getUserName());
+		if(cust==null) throw new UserNotFoundException(CommonConstants.CUSTOMER_DOES_NOT_EXIST_ERROR_MESSAGE);
+		Kyc kycData = kycRepository.findByCustId(cust.getId());
+		if(kycData==null) {
+			kycData = new Kyc();
+			kycData.setId(sequenceGenerator.generateSequence(Kyc.SEQUENCE_NAME));
 		}
-		return "KYC successfully updated";
+		
+		kycData.setCustId(cust.getId());
+		kycData.setAdhaarNum(kycDetailsDto.getAdhaarNum());
+		kycData.setPanNum(kycDetailsDto.getPanNum());
+		
+		kycData = kycRepository.save(kycData);
+		
+		cust.setKycDetails(kycData.getId());
+		customerRepository.save(cust);
+			
+		return;
 	}
 
-	public CustomerDetailsDto getCustomerDetails(String username) {
+	public CustomerDetailsDto getCustomerDetails(String username) throws Exception{
 
 		CustomerDetailsDto customerDetails = new CustomerDetailsDto();
 		
-		try {
-			Customer cust = customerRepository.findByUserName(username);
-			if(cust==null) throw new Exception("Invalid Details");
-			
-			customerDetails.setFirstName(cust.getFirstName());
-			customerDetails.setLastName(cust.getLastName());
-			customerDetails.setUserName(cust.getUserName());
-			
-			Kyc kycData = kycRepository.findByCustId(cust.getId());
-			if(kycData==null) {
-				customerDetails.setAdhaarNum("");
-				customerDetails.setPanNum("");
-			}
-			else {
-				customerDetails.setAdhaarNum(kycData.getAdhaarNum());
-				customerDetails.setPanNum(kycData.getPanNum());
-			}
-			
-			List<AccountDetailsDto> accountDetailsList= new ArrayList<AccountDetailsDto>();
-			List<CustomerAccount> custAcc = customerAccountRepository.findByCustId(cust.getId());
-			if(custAcc!=null && !custAcc.isEmpty()) {
-				for(CustomerAccount data: custAcc) {
-					Optional<Account> acc = accountRepository.findById(data.getAccId());
-					if(acc.isPresent()) {
-						AccountDetailsDto  accDetails  = new AccountDetailsDto();
-						accDetails.setAccNum(acc.get().getAccNum());
-						accDetails.setBalance(acc.get().getBalance());
-						accDetails.setAccType(acc.get().getAccType());
-						accountDetailsList.add(accDetails);
-					}
+		
+		if(username==null || username.equalsIgnoreCase("")) throw new InvalidDataException(CommonConstants.INVALID_DATA_ERROR_MESSAGE);
+		Customer cust = customerRepository.findByUserName(username);
+		if(cust==null) throw new UserNotFoundException(CommonConstants.CUSTOMER_DOES_NOT_EXIST_ERROR_MESSAGE);
+		
+		customerDetails.setFirstName(cust.getFirstName());
+		customerDetails.setLastName(cust.getLastName());
+		customerDetails.setUserName(cust.getUserName());
+		
+		Kyc kycData = kycRepository.findByCustId(cust.getId());
+		if(kycData==null) {
+			customerDetails.setAdhaarNum("");
+			customerDetails.setPanNum("");
+		}
+		else {
+			customerDetails.setAdhaarNum(kycData.getAdhaarNum());
+			customerDetails.setPanNum(kycData.getPanNum());
+		}
+		
+		List<AccountDetailsDto> accountDetailsList= new ArrayList<AccountDetailsDto>();
+		List<CustomerAccount> custAcc = customerAccountRepository.findByCustId(cust.getId());
+		if(custAcc!=null && !custAcc.isEmpty()) {
+			for(CustomerAccount data: custAcc) {
+				Optional<Account> acc = accountRepository.findById(data.getAccId());
+				if(acc.isPresent()) {
+					AccountDetailsDto  accDetails  = new AccountDetailsDto();
+					accDetails.setAccNum(acc.get().getAccNum());
+					accDetails.setBalance(acc.get().getBalance());
+					accDetails.setAccType(acc.get().getAccType());
+					accountDetailsList.add(accDetails);
 				}
 			}
-			customerDetails.setAccountList(accountDetailsList);
-			
 		}
-		catch(Exception e) {
-			return null;
-		}
+		customerDetails.setAccountList(accountDetailsList);
 		return customerDetails;
 	}
 

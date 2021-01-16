@@ -13,7 +13,9 @@ import com.banking.model.Employee;
 
 public class MyEmpDetails implements UserDetails {
 
-    private String userName;
+
+	private static final long serialVersionUID = -9175629115760733793L;
+	private String userName;
     private String password;
     private boolean active;
     private List<GrantedAuthority> authorities;

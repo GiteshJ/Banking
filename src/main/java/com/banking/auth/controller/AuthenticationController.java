@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.banking.auth.model.AuthenticationRequest;
@@ -32,13 +31,8 @@ public class AuthenticationController {
 
 	@Autowired
 	private MyUserDetailsService userDetailsService;
-	@Autowired
-    private JwtUtil jwtUtil;
-	@RequestMapping({ "/hello" })
-	public String firstPage() {
-		return "Hello World";
-	}
-
+	
+	
 	@PostMapping(value = "/authenticate")
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
 
@@ -56,7 +50,9 @@ public class AuthenticationController {
 				.loadUserByUsername(authenticationRequest.getUsername());
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
-
+		tokenBlacklistSet.blackListedTokens.remove(token);
+		
+		
 		return ResponseEntity.ok(new AuthenticationResponse(token));
 	}
 	
@@ -64,11 +60,11 @@ public class AuthenticationController {
 	public String logout(HttpServletRequest request) throws Exception {
 		final String authorizationHeader = request.getHeader("Authorization");
 
-        String jwt = null;
+        String token = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
-            tokenBlacklistSet.blackListedTokens.add(jwt);
+        	token = authorizationHeader.substring(7);
+            tokenBlacklistSet.blackListedTokens.add(token);
         }
         return "Logged Out Successfully";
 	}
