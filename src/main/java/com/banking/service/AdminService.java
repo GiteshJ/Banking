@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.banking.ValidationUtil.UserValidation;
+import com.banking.aspect.customAnnotation.Logging;
 import com.banking.common.CommonConstants;
 import com.banking.customException.DuplicateUserNameException;
 import com.banking.customException.InvalidDataException;
@@ -17,6 +18,7 @@ import com.banking.repository.AdminRepository;
 
 @Service
 @Transactional
+@Logging
 public class AdminService {
 	@Autowired
 	AdminRepository adminRepository;

@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.banking.ValidationUtil.KYCValidation;
 import com.banking.ValidationUtil.UserValidation;
+import com.banking.aspect.customAnnotation.Logging;
+import com.banking.aspect.customAnnotation.TrackExecutionTime;
 import com.banking.common.CommonConstants;
 import com.banking.customException.DuplicateUserNameException;
 import com.banking.customException.InvalidDataException;
@@ -28,8 +30,10 @@ import com.banking.repository.CustomerAccountRepository;
 import com.banking.repository.CustomerRepository;
 import com.banking.repository.KycRepository;
 
+
 @Service
 @Transactional
+@Logging
 public class CustomerService {
 
 	@Autowired
@@ -96,6 +100,7 @@ public class CustomerService {
 		return;
 	}
 
+	@TrackExecutionTime
 	public CustomerDetailsDto getCustomerDetails(String username) throws Exception{
 
 		CustomerDetailsDto customerDetails = new CustomerDetailsDto();
