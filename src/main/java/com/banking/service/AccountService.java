@@ -10,6 +10,8 @@ import com.banking.ValidationUtil.BankStatementValidation;
 import com.banking.ValidationUtil.LinkAccountValidation;
 import com.banking.ValidationUtil.TransferMoneyValidation;
 import com.banking.ValidationUtil.UpdateBalanceValidation;
+import com.banking.aspect.customAnnotation.Logging;
+import com.banking.aspect.customAnnotation.TrackExecutionTime;
 import com.banking.common.CommonConstants;
 import com.banking.customException.AccountLinkedException;
 import com.banking.customException.DuplicateAccNumException;
@@ -30,6 +32,7 @@ import com.banking.repository.CustomerRepository;
 
 @Service
 @Transactional
+@Logging
 public class AccountService {
 
 	@Autowired
@@ -79,6 +82,7 @@ public class AccountService {
 		return;
 	}
 	
+	
 	public void updateBalance(UpdateBalanceDto updateBalance ) throws Exception{
 		
 		if(!UpdateBalanceValidation.validate(updateBalance)) throw new InvalidDataException(CommonConstants.INVALID_DATA_ERROR_MESSAGE);
@@ -101,6 +105,7 @@ public class AccountService {
 		return "Balance : "+acc.getBalance();
 	}
 	
+	@TrackExecutionTime
 	public void transferMoney(TransferMoneyDto transferMoneyDto) throws Exception {
 		
 		if(!TransferMoneyValidation.validate(transferMoneyDto)) throw new InvalidDataException(CommonConstants.INVALID_DATA_ERROR_MESSAGE);
@@ -116,6 +121,7 @@ public class AccountService {
 		return;
 	}
 	
+	@TrackExecutionTime
 	public byte[] getStatement(BankStatementDto bankStatementDto) {
 		try {
 			if(!BankStatementValidation.validate(bankStatementDto)) throw new InvalidDataException(CommonConstants.INVALID_DATA_ERROR_MESSAGE);

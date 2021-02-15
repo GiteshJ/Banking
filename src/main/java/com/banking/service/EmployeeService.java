@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.banking.ValidationUtil.UserValidation;
+import com.banking.aspect.customAnnotation.Logging;
 import com.banking.common.CommonConstants;
 import com.banking.customException.DuplicateUserNameException;
 import com.banking.customException.InvalidDataException;
@@ -16,8 +17,10 @@ import com.banking.dto.UserDto;
 import com.banking.model.Employee;
 import com.banking.repository.EmployeeRepository;
 
-@Transactional
+
 @Service
+@Transactional
+@Logging
 public class EmployeeService {
 	@Autowired
 	EmployeeRepository employeeRepository;
