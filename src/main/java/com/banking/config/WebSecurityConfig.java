@@ -42,10 +42,12 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/customer/**").hasRole("EMPLOYEE")
 				.antMatchers("/signout").hasAnyRole("ADMIN","EMPLOYEE")
 				.antMatchers("/authenticate").permitAll()
-				.antMatchers("/admin/**").permitAll().
-						anyRequest().authenticated().and().
-						exceptionHandling().and().sessionManagement()
+				.antMatchers("/admin/**").permitAll()
+				.antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
+				.anyRequest().authenticated().and()
+				.exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
 	}
