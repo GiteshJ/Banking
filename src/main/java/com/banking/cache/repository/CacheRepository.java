@@ -23,15 +23,15 @@ public class CacheRepository {
     }
 
 
-    public void save(String key,List<CustomerDetailsDto> map,int ttl) {
+    public void save(String key,List<Object> map,int ttl) {
     	this.valueoperations.set(key, map);
         redisTemplate.expire(key,ttl,TimeUnit.HOURS);
     }
 
 
-    public List<CustomerDetailsDto> findAll(String key){
+    public List<Object> findAll(String key){
         System.out.println();
-        return (List<CustomerDetailsDto>) valueoperations.get(key);
+        return (List<Object>) valueoperations.get(key);
     }
 
 }

@@ -1,9 +1,9 @@
 package com.banking.aspect.advice;
 
-import java.util.List;
-import java.util.Map;
-
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.List;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -35,16 +35,15 @@ public class CacheAdvice {
         Method method = getCurrentMethod(joinPoint);
         String key = method.getName();
         logger.info("Cache ----"+key);
-
         Object result = cacheRepository.findAll(key);
-        List<CustomerDetailsDto> resultMap = (List<CustomerDetailsDto>)result;
+        List<?> resultMap = (List<?>)result;
         if(result!=null && resultMap.size()>0)
             return resultMap;
 
         result = joinPoint.proceed();
         Cache cache = method.getAnnotation(Cache.class);
         logger.info("Caching Start----"+key);
-        cacheRepository.save(key,(List<CustomerDetailsDto>) result,cache.ttl());
+        cacheRepository.save(key,(List<Object>) result,cache.ttl());
         logger.info("Caching Done");
         return result;
     }
