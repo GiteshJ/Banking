@@ -1,5 +1,7 @@
 package com.banking.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import com.banking.customException.DuplicateAccNumException;
 import com.banking.customException.InsufficientBalanceException;
 import com.banking.customException.InvalidDataException;
 import com.banking.customException.UserNotFoundException;
+import com.banking.dto.AccountDetailsDto;
 import com.banking.dto.BankStatementDto;
 import com.banking.dto.LinkAccountDto;
 import com.banking.dto.TransferMoneyDto;
@@ -211,5 +214,24 @@ public class AccountController {
 		
 	}
 	
-	
+	@GetMapping("/all")
+	public ResponseEntity<ApiResponseObject> getAllAccounts() {
+		 
+		HttpStatus status;
+		HttpHeaders httpHeader = new HttpHeaders();
+		String message;
+		try {
+			List<AccountDetailsDto> data = accountService.getAllAccount();
+			status = HttpStatus.OK;
+			message = CommonConstants.BALANCE_FECTH_SUCCESS_MESSAGE;
+			return new ResponseEntity<>(new ApiEntity(message,data),httpHeader,status);
+			
+		} 
+		catch (Exception ex) {
+			logger.error(ex.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+			message = CommonConstants.SERVER_ERROR;
+			return new ResponseEntity<>(new ApiError(message),httpHeader,status); 
+		}
+	}
 }

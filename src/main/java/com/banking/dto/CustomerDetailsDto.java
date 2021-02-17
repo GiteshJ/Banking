@@ -1,5 +1,6 @@
 package com.banking.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -13,7 +14,11 @@ import lombok.Setter;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerDetailsDto {
+public class CustomerDetailsDto implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3494496794321198392L;
 	private String userName;
     private String firstName;
     private String lastName;

@@ -1,5 +1,8 @@
 package com.banking.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +13,7 @@ import com.banking.ValidationUtil.BankStatementValidation;
 import com.banking.ValidationUtil.LinkAccountValidation;
 import com.banking.ValidationUtil.TransferMoneyValidation;
 import com.banking.ValidationUtil.UpdateBalanceValidation;
+import com.banking.aspect.customAnnotation.Cache;
 import com.banking.aspect.customAnnotation.Logging;
 import com.banking.aspect.customAnnotation.TrackExecutionTime;
 import com.banking.common.CommonConstants;
@@ -18,6 +22,7 @@ import com.banking.customException.DuplicateAccNumException;
 import com.banking.customException.InsufficientBalanceException;
 import com.banking.customException.InvalidDataException;
 import com.banking.customException.UserNotFoundException;
+import com.banking.dto.AccountDetailsDto;
 import com.banking.dto.BankStatementDto;
 import com.banking.dto.LinkAccountDto;
 import com.banking.dto.TransferMoneyDto;
@@ -136,6 +141,24 @@ public class AccountService {
 		
 	}
 	
-	
+	@TrackExecutionTime
+	@Cache
+	public List<AccountDetailsDto> getAllAccount(){
+		
+		List<AccountDetailsDto> accountDetailsList = new ArrayList<>();
+		
+		List<Account> accList = accountRepository.findAll();
+		if(accList==null) return accountDetailsList;
+		accList.parallelStream().forEach(acc -> {
+			AccountDetailsDto  accDetails  = new AccountDetailsDto();
+			accDetails.setAccNum(acc.getAccNum());
+			accDetails.setBalance(acc.getBalance());
+			accDetails.setAccType(acc.getAccType());
+			accountDetailsList.add(accDetails);
+		});
+		
+		return accountDetailsList;
+		
+	}
 	
 }
