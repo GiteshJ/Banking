@@ -1,8 +1,11 @@
 package com.banking.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -165,6 +168,45 @@ public class CustomerController {
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 			message = CommonConstants.SERVER_ERROR;
 			return new ResponseEntity<>(new ApiError(message),httpHeader,status); 
+		}
+	}
+	
+	@GetMapping("/all")
+	public ResponseEntity<ApiResponseObject> getAllCustomer() {
+		
+		HttpStatus status;
+		HttpHeaders httpHeader = new HttpHeaders();
+		String message;
+		
+		try {
+			List<CustomerDetailsDto> data =  customerService.getAllCustomerDetails();
+			status = HttpStatus.OK;
+			message = CommonConstants.CUSTOMER_DETAILS_SUCCESS_MESSAGE;
+			return new ResponseEntity<>(new ApiEntity(message,data),httpHeader,status);
+			
+		} 
+		catch (Exception ex) {
+			logger.error(ex.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+			message = CommonConstants.SERVER_ERROR;
+			return new ResponseEntity<>(new ApiError(message),httpHeader,status); 
+		}
+	}
+	
+	//Apis to Test @Cacheable annotation works only with entity return type and not with 
+	//response entities for that will have to use @cache custom annotation and AOP to save and read cache
+	@GetMapping("/allTest")
+	@Cacheable(value="customerMap")
+	public List<CustomerDetailsDto> getAllCustomerTest() {
+		
+		try {
+			List<CustomerDetailsDto> data =  customerService.getAllCustomerDetailsTest();
+			return data;
+			
+		} 
+		catch (Exception ex) {
+			logger.error(ex.getMessage());
+			return null;
 		}
 	}
 }

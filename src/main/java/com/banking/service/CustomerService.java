@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.banking.ValidationUtil.KYCValidation;
 import com.banking.ValidationUtil.UserValidation;
+import com.banking.aspect.customAnnotation.Cache;
 import com.banking.aspect.customAnnotation.Logging;
 import com.banking.aspect.customAnnotation.TrackExecutionTime;
 import com.banking.common.CommonConstants;
@@ -142,5 +143,61 @@ public class CustomerService {
 		return customerDetails;
 	}
 
+	@TrackExecutionTime
+	@Cache
+	public List<CustomerDetailsDto> getAllCustomerDetails() throws Exception{
+
+		List<CustomerDetailsDto> customerDetailsAll = new ArrayList<CustomerDetailsDto>();
+		System.out.println("check multiple aspects");
+		List<Customer> custAll = customerRepository.findAll();
+		if(custAll==null) return customerDetailsAll;
+		
+		custAll.stream().forEach(cust -> {
+			CustomerDetailsDto customerDetails = new CustomerDetailsDto();
+			customerDetails.setFirstName(cust.getFirstName());
+			customerDetails.setLastName(cust.getLastName());
+			customerDetails.setUserName(cust.getUserName());
+			Kyc kycData = kycRepository.findByCustId(cust.getId());
+			if(kycData==null) {
+				customerDetails.setAdhaarNum("");
+				customerDetails.setPanNum("");
+			}
+			else {
+				customerDetails.setAdhaarNum(kycData.getAdhaarNum());
+				customerDetails.setPanNum(kycData.getPanNum());
+			}
+			customerDetailsAll.add(customerDetails);
+		});
+
+		return customerDetailsAll;
+	}
+	
+	@TrackExecutionTime
+	public List<CustomerDetailsDto> getAllCustomerDetailsTest() throws Exception{
+
+		List<CustomerDetailsDto> customerDetailsAll = new ArrayList<CustomerDetailsDto>();
+		
+		List<Customer> custAll = customerRepository.findAll();
+		if(custAll==null) return customerDetailsAll;
+		
+		custAll.stream().forEach(cust -> {
+			CustomerDetailsDto customerDetails = new CustomerDetailsDto();
+			customerDetails.setFirstName(cust.getFirstName());
+			customerDetails.setLastName(cust.getLastName());
+			customerDetails.setUserName(cust.getUserName());
+			Kyc kycData = kycRepository.findByCustId(cust.getId());
+			if(kycData==null) {
+				customerDetails.setAdhaarNum("");
+				customerDetails.setPanNum("");
+			}
+			else {
+				customerDetails.setAdhaarNum(kycData.getAdhaarNum());
+				customerDetails.setPanNum(kycData.getPanNum());
+			}
+			customerDetailsAll.add(customerDetails);
+		});
+
+		return customerDetailsAll;
+	}
 
 }
