@@ -45,3 +45,4 @@ Do give a :star: if you like the project.
 
 Want to contribute? Great! 😍<br/>
 Drop me a message at the contact details provided above.
+
