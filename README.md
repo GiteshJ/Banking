@@ -3,7 +3,7 @@
 ## Description
 A sample project on Banking Application. The main objective of this project is to try different practices in software development and Spring Boot more specifically.
 
-** Current Project Includes - **
+**Current Project Includes -**
  -  RESTful APIs
  -  Authentication using JWT tokens
  -  Authorisation based on roles
@@ -11,10 +11,10 @@ A sample project on Banking Application. The main objective of this project is t
  -  Tracking Execution Time using Spring AOP
  -  Caching using Spring Data Redis and Spring AOP
 
-** Project Inclusions Under Development - **
+**Project Inclusions Under Development -**
  - Swagger
 
-** Future Project Inclusions Planned - **
+**Future Project Inclusions Planned -**
  - Spring Cloud
  - Apache Kafka
  - Eureka
@@ -31,17 +31,17 @@ The aim of this project is to provide a learning project developers can refer to
  - Spring AOP
  - Spring Data Redis
 
-### Team
+### Developer
 
-| Name | Connect With Us | Or Drop A Mail |
+| Name | Connect With me | Or Drop A Mail |
 | ------ | ------ |------ |
 | Gitesh Jain | [LinkedIn](https://www.linkedin.com/in/gitesh1996/) | *giteshjain844@gmail.com* |
 
-### From The Team
-As a developer I am open to all suggestions from every one. So if you see you can make a few things better or add more amazing stuff, feel free to reach out. I will be more than happy to have contributions from all around.
+### From The Developer
+As a developer I am open to all suggestions from every one. So if you see you can make a few things better or add more amazing stuff, feel free to reach out. I will be more than happy to have contributions from all around.<br/>
 Do give a :star: if you like the project.
 
 ### Contribute
 
-Want to contribute? Great! 😍
+Want to contribute? Great! 😍<br/>
 Drop me a message at the contact details provided above.
