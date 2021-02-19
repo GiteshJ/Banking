@@ -20,10 +20,10 @@ A sample project on Banking Application. The main objective of this project is t
  - Eureka
  - Junit and Jacoco
 
-### Aim
+## Aim
 The aim of this project is to provide a learning project developers can refer to to learn and try new stuff. 
 
-### Tech Stack
+## Tech Stack
  - Java
  - Spring Boot
  - Maven
@@ -31,17 +31,17 @@ The aim of this project is to provide a learning project developers can refer to
  - Spring AOP
  - Spring Data Redis
 
-### Developer
+## Developer
 
 | Name | Connect With me | Or Drop A Mail |
 | ------ | ------ |------ |
 | Gitesh Jain | [LinkedIn](https://www.linkedin.com/in/gitesh1996/) | *giteshjain844@gmail.com* |
 
-### From The Developer
+## From The Developer
 As a developer I am open to all suggestions from every one. So if you see you can make a few things better or add more amazing stuff, feel free to reach out. I will be more than happy to have contributions from all around.<br/>
 Do give a :star: if you like the project.
 
-### Contribute
+## Contribute
 
 Want to contribute? Great! 😍<br/>
 Drop me a message at the contact details provided above.
