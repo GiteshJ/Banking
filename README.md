@@ -21,7 +21,7 @@ A sample project on Banking Application. The main objective of this project is t
  - Junit and Jacoco
 
 ## Aim
-The aim of this project is to provide a learning project developers can refer to to learn and try new stuff. 
+The aim of this project is to provide a learning project developers can refer, to learn and try new stuff. 
 
 ## Tech Stack
  - Java
@@ -38,7 +38,7 @@ The aim of this project is to provide a learning project developers can refer to
 | Gitesh Jain | [LinkedIn](https://www.linkedin.com/in/gitesh1996/) | *giteshjain844@gmail.com* |
 
 ## From The Developer
-As a developer I am open to all suggestions from every one. So if you see you can make a few things better or add more amazing stuff, feel free to reach out. I will be more than happy to have contributions from all around.<br/>
+As a developer I am open to all suggestions from everyone. So if you see you can make a few things better or add more amazing stuff, feel free to reach out. I will be more than happy to have contributions from all around.<br/>
 Do give a :star: if you like the project.
 
 ## Contribute
