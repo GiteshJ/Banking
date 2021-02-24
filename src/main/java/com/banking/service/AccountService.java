@@ -2,6 +2,9 @@ package com.banking.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+
+import javax.annotation.Resource;
 
 import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import com.banking.aspect.customAnnotation.Cache;
 import com.banking.aspect.customAnnotation.Logging;
 import com.banking.aspect.customAnnotation.TrackExecutionTime;
 import com.banking.common.CommonConstants;
+import com.banking.utils.StatisticsUtils;
 import com.banking.customException.AccountLinkedException;
 import com.banking.customException.DuplicateAccNumException;
 import com.banking.customException.InsufficientBalanceException;
@@ -35,6 +39,11 @@ import com.banking.repository.AccountRepository;
 import com.banking.repository.CustomerAccountRepository;
 import com.banking.repository.CustomerRepository;
 
+import static com.banking.utils.StatisticsUtils.totalContentSize;
+
+
+import io.micrometer.core.instrument.Counter;
+
 @Service
 @Transactional
 @Logging
@@ -48,6 +57,12 @@ public class AccountService {
 	CustomerAccountRepository customerAccountRepository;
 	@Autowired
 	SequenceGeneratorService sequenceGenerator;
+
+	@Resource
+	private Counter objectsCount;
+	@Resource
+    private AtomicLong averageObjectSize;
+	private List<Float> amountStorage = new ArrayList<>();
 	
 	public void creatAccount(Account account) throws Exception {
 		
@@ -123,6 +138,11 @@ public class AccountService {
 		accRec.setBalance(accRec.getBalance()+ value);
 		accountRepository.save(accSen);
 		accountRepository.save(accRec);
+		
+		amountStorage.add(value);
+		objectsCount.increment();
+		averageObjectSize.set(totalContentSize(amountStorage));
+		
 		return;
 	}
 	
