@@ -10,6 +10,7 @@ A sample project on Banking Application. The main objective of this project is t
  -  Logging using Spring AOP
  -  Tracking Execution Time using Spring AOP
  -  Caching using Spring Data Redis and Spring AOP
+ -  Production Ready Features with SpringBoot Actuator
 
 **Project Inclusions Under Development -**
  - Swagger
