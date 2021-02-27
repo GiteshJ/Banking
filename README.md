@@ -31,6 +31,7 @@ The aim of this project is to provide a learning project developers can refer, t
  - MongoDB
  - Spring AOP
  - Spring Data Redis
+ - Spring Boot Actuator
 
 ## Developer
 
